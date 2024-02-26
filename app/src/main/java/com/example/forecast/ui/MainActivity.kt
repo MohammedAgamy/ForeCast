@@ -1,9 +1,9 @@
-package com.example.forecast
+package com.example.forecast.ui
 
-import android.R
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import com.example.forecast.databinding.ActivityMainBinding
 
 
@@ -13,13 +13,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val fragment = HOMEFragment()
+        val fragment = HomeFragment()
         binding.animationView.playAnimation()
         binding.animationView
+
+
         binding.btnStart.setOnClickListener {
-            supportFragmentManager.beginTransaction()
-                .replace(binding.container.id, fragment)
-                .commit()
+            Log.i("frg" , "Done")
+           var intent = Intent(this , HomeActivity::class.java)
+            startActivity(intent)
 
         }
     }
