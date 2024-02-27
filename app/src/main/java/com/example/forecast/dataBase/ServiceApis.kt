@@ -1,12 +1,19 @@
 package com.example.forecast.dataBase
 
 import com.example.forecast.newmodel.WeatherModelNew
+import com.example.forecast.newmodel.listofweather.Day
+import com.example.forecast.newmodel.listofweather.Forecast
+import com.example.forecast.newmodel.listofweather.Forecastday
+import com.example.forecast.newmodel.listofweather.ListOfWeather
 import retrofit2.Call
 import retrofit2.http.GET
 
 interface ServiceApis {
-    @GET("current.json?key=582fd7fa778b489780593251242202&q=29.981022344497138, 31.13160667074973&aqi=no")
+    @GET("current.json?key=582fd7fa778b489780593251242202&q=28.39358127454683, 35.886640378494974&aqi=no")
     fun getService(): Call<WeatherModelNew>
+
+    @GET("marine.json?key=582fd7fa778b489780593251242202&q=28.39358127454683, 35.886640378494974&days=7")
+    fun getWeatherDay():Call<ListOfWeather>
 
 
 }

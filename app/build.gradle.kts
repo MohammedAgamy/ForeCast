@@ -50,10 +50,11 @@ dependencies {
 
     //lottie anim
     implementation ("com.airbnb.android:lottie:3.4.0")
-
+    //retrofit2
     implementation ("com.squareup.retrofit2:retrofit:2.5.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.5.0")
-
+    //picasso
+    implementation ("com.squareup.picasso:picasso:2.8")
 
 
 }
