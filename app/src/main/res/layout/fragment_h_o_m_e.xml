@@ -56,12 +56,14 @@
 				app:layout_constraintStart_toStartOf="parent"
 		>
 
-			<ImageView android:layout_width="90dp"
+			<ImageView
+
+					android:layout_width="90dp"
 					   android:layout_height="90dp"
 					   android:src="@drawable/suncloud"
 					   app:layout_constraintTop_toTopOf="parent"
 					   android:layout_marginEnd="20dp"
-					   app:layout_constraintEnd_toEndOf="parent" android:id="@+id/imageView_item"
+					   app:layout_constraintEnd_toEndOf="parent" android:id="@+id/imageView"
 					   app:layout_constraintBottom_toBottomOf="parent"/>
 
 			<TextView
@@ -71,9 +73,9 @@
 					android:text="today"
 					android:textColor="@color/white"
 					android:textSize="20sp"
-					app:layout_constraintStart_toStartOf="@id/imageView_item"
-					app:layout_constraintEnd_toEndOf="@id/imageView_item"
-					app:layout_constraintTop_toBottomOf="@id/imageView_item"/>
+					app:layout_constraintStart_toStartOf="@id/imageView"
+					app:layout_constraintEnd_toEndOf="@id/imageView"
+					app:layout_constraintTop_toBottomOf="@id/imageView"/>
 
 			<TextView
 					android:id="@+id/temperature"
@@ -83,10 +85,10 @@
 					android:textSize="45sp"
 					android:textStyle="bold"
 					android:textColor="@color/white"
-					app:layout_constraintEnd_toStartOf="@+id/imageView_item"
+					app:layout_constraintEnd_toStartOf="@+id/imageView"
 					android:layout_marginEnd="15dp"
-					app:layout_constraintBottom_toBottomOf="@+id/imageView_item"
-					app:layout_constraintTop_toTopOf="@+id/imageView_item"/>
+					app:layout_constraintBottom_toBottomOf="@+id/imageView"
+					app:layout_constraintTop_toTopOf="@+id/imageView"/>
 			<TextView
 					android:id="@+id/c"
 					android:layout_width="wrap_content"
@@ -95,7 +97,7 @@
 					android:textSize="15dp"
 					android:textStyle="bold"
 					android:textColor="@color/white"
-					app:layout_constraintTop_toTopOf="@+id/imageView_item"
+					app:layout_constraintTop_toTopOf="@+id/imageView"
 					app:layout_constraintBottom_toBottomOf="@+id/temperature"
 					app:layout_constraintStart_toEndOf="@+id/temperature"
 			/>

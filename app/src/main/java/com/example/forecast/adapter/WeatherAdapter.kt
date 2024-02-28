@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.forecast.R
 import com.example.forecast.newmodel.listofweather.*
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.withContext
 
 class WeatherAdapter(val list: ArrayList<ListOfWeather>) : RecyclerView.Adapter<WeatherAdapter.MyHolder>() {
 
@@ -30,6 +32,7 @@ class WeatherAdapter(val list: ArrayList<ListOfWeather>) : RecyclerView.Adapter<
        Picasso.get()
             .load(list.get(position).forecast!!.forecastday!!.get(position).day!!.condition!!.icon)
             .into(holder.image);
+
 
 
     }

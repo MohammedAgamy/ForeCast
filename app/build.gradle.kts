@@ -55,6 +55,11 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.5.0")
     //picasso
     implementation ("com.squareup.picasso:picasso:2.8")
+    //location
+    implementation ("com.google.android.gms:play-services-location:17.0.0")
+    //glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
 
 
 }
