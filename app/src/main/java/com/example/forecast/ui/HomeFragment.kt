@@ -27,6 +27,7 @@ import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.system.exitProcess
 
 
 class HomeFragment : Fragment() {
@@ -48,23 +49,35 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //call api
         val call: ServiceApis = Client.getRetrofit().create(ServiceApis::class.java)
 
+        //call weather day
         callWeather(call)
+        //call weather one day
         callWeatherDay(call)
+        //get user location
         getLocation()
+
+
+        binding.btnBack.setOnClickListener {
+            System.exit(-1)
+        }
 
 
     }
 
+    // response from api (one day)
     fun callWeather(call: ServiceApis) {
         call.getService().enqueue(object : Callback<WeatherModelNew> {
             override fun onResponse(call: Call<WeatherModelNew>, response: Response<WeatherModelNew>) {
                 if (response.isSuccessful) {
 
                     //binding.imageView.setImageURI(response.body()!!.current!!.condition!!.icon!!.toUri())
-                   // Glide.with(context!!).load(response.body()!!.current!!.condition!!.icon).into(binding.imageView)
+                    Glide.with(context!!).load("https:" + response.body()!!.current!!.condition!!.icon)
+                        .into(binding.imageView)
 
+                    //set data to fun
                     setData(
                         response.body()!!.location!!.country.toString(),
                         response.body()!!.current!!.tempC.toString(),
@@ -85,11 +98,13 @@ class HomeFragment : Fragment() {
         })
     }
 
+    // response from api (all day)
     fun callWeatherDay(call: ServiceApis) {
         call.getWeatherDay().enqueue(object : Callback<ListOfWeather> {
             override fun onResponse(call: Call<ListOfWeather>, response: Response<ListOfWeather>) {
                 if (response.isSuccessful) {
                     // Log.i(TAG + "R", response.body()!!.day!!.toString())
+                    // get data from api response
                     val data = response.body()!!
                     dataOfDays(data)
 
@@ -107,21 +122,30 @@ class HomeFragment : Fragment() {
         })
     }
 
-    fun setData(location: String, temperature: String, cloud: String, Wind: String, time: String, mode: String) {
+    //set data from abi to ui
+    fun setData(location: String, temperature: String, cloud: String, wind: String, time: String, mode: String) {
         binding.location.text = location
         binding.temperature.text = temperature
         binding.cloud.text = "Cloud " + cloud
-        binding.Wind.text = "Wind " + Wind
+        binding.Wind.text = "Wind " + wind
         binding.time.text = time
         binding.mode.text = mode
     }
 
+    // get weather data to all day
     fun dataOfDays(data: ListOfWeather) {
+        // loop in data response
         for (item in data.toString()) {
-            for (item in mList.size.until(10)) {
+            // loop in list until 10 item if no until (out of index)
+            for (item in mList.size.until(5)) {
+                // get length from list
                 for (i in item..mList.size.toString().length) {
+                    //add data to list
+
+
                     mList.add(data)
                     Log.i(TAG + "R2", mList.toString())
+
 
                 }
 
@@ -131,12 +155,15 @@ class HomeFragment : Fragment() {
         }
 
 
+        //set data to adapter and show in recycler view
         mAdapter = WeatherAdapter(mList)
         binding.recyclerid.layoutManager = LinearLayoutManager(context)
         binding.recyclerid.adapter = WeatherAdapter(mList)
         binding.recyclerid.hasFixedSize()
+
     }
 
+    // get lat and long from yoyr location
     @SuppressLint("MissingPermission")
     private fun getLocation() {
         val locationManager = context?.let { LocationServices.getFusedLocationProviderClient(it!!) }

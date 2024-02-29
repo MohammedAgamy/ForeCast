@@ -9,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.Debug.getLocation
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.airbnb.lottie.LottieAnimationView
 import com.example.forecast.databinding.ActivityMainBinding
+import kotlin.system.exitProcess
 
 
 class MainActivity : AppCompatActivity() {
@@ -18,18 +20,32 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        //call LocationPermission
         requestLocationPermission()
-        binding.animationView.playAnimation()
-        binding.btnStart.setOnClickListener {
-            Log.i("frg" , "Done")
-           var intent = Intent(this , HomeActivity::class.java)
-            startActivity(intent)
 
+
+        binding.animationView.animation
+        binding.animationView.playAnimation()
+
+
+        //go to weather activity
+        binding.btnStart.setOnClickListener {
+            Log.i("frg", "Done")
+            var intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
+            finish()
         }
+
+
     }
 
+
     fun requestLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
         } else {
             // Permission already granted, proceed to access location
@@ -43,15 +59,14 @@ class MainActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLocation()
             }
-                // Permission granted, proceed to access location
-            } else {
-                // Permission denied, handle user rejection (optional)
-                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
-            }
+            // Permission granted, proceed to access location
+        } else {
+            // Permission denied, handle user rejection (optional)
+            Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show()
         }
+    }
 
-    fun getLocation()
-    {
+    fun getLocation() {
 
     }
 }

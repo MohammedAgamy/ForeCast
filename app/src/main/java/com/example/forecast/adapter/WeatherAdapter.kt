@@ -30,7 +30,7 @@ class WeatherAdapter(val list: ArrayList<ListOfWeather>) : RecyclerView.Adapter<
         holder.mode.text = list.get(position).forecast!!.forecastday!!.get(position).day!!.condition!!.text
 
        Picasso.get()
-            .load(list.get(position).forecast!!.forecastday!!.get(position).day!!.condition!!.icon)
+            .load("https:"+list.get(position).forecast!!.forecastday!!.get(position).day!!.condition!!.icon)
             .into(holder.image);
 
 

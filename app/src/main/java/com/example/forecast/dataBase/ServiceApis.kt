@@ -16,7 +16,7 @@ interface ServiceApis {
     @GET("current.json?key=582fd7fa778b489780593251242202&q=28.39358127454683, 35.886640378494974&aqi=no")
     fun getService(): Call<WeatherModelNew>
 
-    @GET("marine.json?key=582fd7fa778b489780593251242202&q=28.39358127454683, 35.886640378494974&days=20")
+    @GET("marine.json?key=582fd7fa778b489780593251242202&q=28.39358127454683, 35.886640378494974&days=7")
     fun getWeatherDay():Call<ListOfWeather>
 
 
