@@ -37,6 +37,16 @@ class HomeFragment : Fragment() {
     lateinit var mAdapter: WeatherAdapter
     var mList: ArrayList<ListOfWeather> = ArrayList()
 
+    //lat and long location
+    var lat: Double? = null
+    var long: Double? = null
+
+  /*  companion object {
+        val x = HomeFragment()
+        var lat = x.lat.toString()
+        var long = x.long.toString()
+    }*/
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -51,13 +61,14 @@ class HomeFragment : Fragment() {
 
         //call api
         val call: ServiceApis = Client.getRetrofit().create(ServiceApis::class.java)
-
+        //get user location
+        getLocation()
         //call weather day
         callWeather(call)
         //call weather one day
         callWeatherDay(call)
-        //get user location
-        getLocation()
+
+
 
 
         binding.btnBack.setOnClickListener {
@@ -136,21 +147,9 @@ class HomeFragment : Fragment() {
     fun dataOfDays(data: ListOfWeather) {
         // loop in data response
         for (item in data.toString()) {
-            // loop in list until 10 item if no until (out of index)
-            for (item in mList.size.until(5)) {
-                // get length from list
-                for (i in item..mList.size.toString().length) {
-                    //add data to list
-
-
-                    mList.add(data)
-                    Log.i(TAG + "R2", mList.toString())
-
-
-                }
-
-
-            }
+            //add data to list
+            mList.add(data)
+            Log.i(TAG + "R2", mList.toString())
 
         }
 
@@ -170,9 +169,9 @@ class HomeFragment : Fragment() {
         locationManager!!.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 // Access location data:
-                val latitude = location.latitude
-                val longitude = location.longitude
-                Toast.makeText(context, latitude.toString(), Toast.LENGTH_SHORT).show()
+                lat = location.latitude
+                long = location.longitude
+                Toast.makeText(context, lat.toString(), Toast.LENGTH_SHORT).show()
                 // Update UI or perform location-based actions
             } else {
                 // Location not available, handle failure (optional)
