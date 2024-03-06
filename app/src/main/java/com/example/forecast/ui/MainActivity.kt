@@ -1,21 +1,25 @@
 package com.example.forecast.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.motion.widget.Debug.getLocation
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.airbnb.lottie.LottieAnimationView
 import com.example.forecast.databinding.ActivityMainBinding
-import kotlin.system.exitProcess
+import com.google.android.gms.location.LocationServices
 
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+
+
+    var lat :String? = null
+    var long :String? = null
+    var localLocation =lat+","+long
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -66,7 +70,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun getLocation() {
+    @SuppressLint("MissingPermission")
+    private fun getLocation() {
 
+        val locationManager = this.let { LocationServices.getFusedLocationProviderClient(it!!) }
+        locationManager!!.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                // Access location data:
+                lat = location.latitude.toString()
+                long = location.longitude.toString()
+                Toast.makeText(this, lat + "," + long, Toast.LENGTH_SHORT).show()
+                // Update UI or perform location-based actions
+            } else {
+                // Location not available, handle failure (optional)
+                Toast.makeText(this, "Location unavailable", Toast.LENGTH_SHORT).show()
+            }
+        }.addOnFailureListener { exception ->
+            // Handle location retrieval failure (optional)
+            Log.e("Location Error", "Failed to get location", exception)
+        }
     }
 }

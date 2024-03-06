@@ -1,7 +1,7 @@
 package com.example.forecast.ui
 
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
+
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,9 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.net.toUri
-import androidx.recyclerview.widget.GridLayoutManager
-
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.forecast.adapter.WeatherAdapter
@@ -19,17 +16,14 @@ import com.example.forecast.dataBase.Client
 import com.example.forecast.dataBase.ServiceApis
 import com.example.forecast.databinding.FragmentHOMEBinding
 import com.example.forecast.newmodel.WeatherModelNew
-
 import com.example.forecast.newmodel.listofweather.ListOfWeather
 import com.google.android.gms.location.LocationServices
-import com.squareup.picasso.Picasso
-
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.system.exitProcess
 
 
+@Suppress("CAST_NEVER_SUCCEEDS")
 class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHOMEBinding
@@ -38,20 +32,15 @@ class HomeFragment : Fragment() {
     var mList: ArrayList<ListOfWeather> = ArrayList()
 
     //lat and long location
-    var lat: Double? = null
-    var long: Double? = null
-
-  /*  companion object {
-        val x = HomeFragment()
-        var lat = x.lat.toString()
-        var long = x.long.toString()
-    }*/
+    var lat: String? = null
+    var long: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHOMEBinding.inflate(inflater, container, false);
+        getLocation()
         return binding.getRoot();
 
     }
@@ -59,31 +48,21 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //call api
-        val call: ServiceApis = Client.getRetrofit().create(ServiceApis::class.java)
-        //get user location
         getLocation()
-        //call weather day
-        callWeather(call)
-        //call weather one day
-        callWeatherDay(call)
-
-
-
-
         binding.btnBack.setOnClickListener {
             System.exit(-1)
         }
-
-
     }
 
-    // response from api (one day)
-    fun callWeather(call: ServiceApis) {
-        call.getService().enqueue(object : Callback<WeatherModelNew> {
+
+    // call foe one day
+    fun callWeather(call: ServiceApis, location: String) {
+        Toast.makeText(context, location + "this", Toast.LENGTH_SHORT).show()
+        call.getService(location).enqueue(object : Callback<WeatherModelNew> {
             override fun onResponse(call: Call<WeatherModelNew>, response: Response<WeatherModelNew>) {
                 if (response.isSuccessful) {
 
+                    Log.i(TAG, "$lat, $long")
                     //binding.imageView.setImageURI(response.body()!!.current!!.condition!!.icon!!.toUri())
                     Glide.with(context!!).load("https:" + response.body()!!.current!!.condition!!.icon)
                         .into(binding.imageView)
@@ -110,11 +89,15 @@ class HomeFragment : Fragment() {
     }
 
     // response from api (all day)
-    fun callWeatherDay(call: ServiceApis) {
-        call.getWeatherDay().enqueue(object : Callback<ListOfWeather> {
-            override fun onResponse(call: Call<ListOfWeather>, response: Response<ListOfWeather>) {
+    fun callWeatherDay(call: ServiceApis, location: String) {
+        Log.i(TAG + "day", "$lat, $long")
+
+        call.getWeatherDay("$lat, $long").enqueue(object : Callback<ListOfWeather> {
+            @SuppressLint("SuspiciousIndentation")
+            override fun onResponse(
+                call: Call<ListOfWeather>, response: Response<ListOfWeather>,
+            ) {
                 if (response.isSuccessful) {
-                    // Log.i(TAG + "R", response.body()!!.day!!.toString())
                     // get data from api response
                     val data = response.body()!!
                     dataOfDays(data)
@@ -122,7 +105,6 @@ class HomeFragment : Fragment() {
                     //Log.i(TAG + "R", response.body()!!.date!!)
                 } else {
                     Log.i(TAG + "N", "day Not response")
-
                 }
             }
 
@@ -145,33 +127,36 @@ class HomeFragment : Fragment() {
 
     // get weather data to all day
     fun dataOfDays(data: ListOfWeather) {
-        // loop in data response
-        for (item in data.toString()) {
-            //add data to list
+
+        for (item in mList.size.until(5)) {
             mList.add(data)
-            Log.i(TAG + "R2", mList.toString())
+            mAdapter = WeatherAdapter(mList)
+            Log.i(TAG + "2", mList.toString())
 
         }
 
 
-        //set data to adapter and show in recycler view
         mAdapter = WeatherAdapter(mList)
-        binding.recyclerid.layoutManager = LinearLayoutManager(context)
+        //set data to adapter and show in recycler view
         binding.recyclerid.adapter = WeatherAdapter(mList)
-        binding.recyclerid.hasFixedSize()
+        binding.recyclerid.layoutManager = LinearLayoutManager(context)
 
     }
 
     // get lat and long from yoyr location
     @SuppressLint("MissingPermission")
     private fun getLocation() {
+
         val locationManager = context?.let { LocationServices.getFusedLocationProviderClient(it!!) }
         locationManager!!.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 // Access location data:
-                lat = location.latitude
-                long = location.longitude
-                Toast.makeText(context, lat.toString(), Toast.LENGTH_SHORT).show()
+                lat = location.latitude.toString()
+                long = location.longitude.toString()
+                val call: ServiceApis = Client.getRetrofit().create(ServiceApis::class.java)
+                var local = "$lat,$long"
+                callWeather(call, local)
+                callWeatherDay(call, local)
                 // Update UI or perform location-based actions
             } else {
                 // Location not available, handle failure (optional)
@@ -183,5 +168,10 @@ class HomeFragment : Fragment() {
         }
     }
 }
+
+
+
+
+
 
 

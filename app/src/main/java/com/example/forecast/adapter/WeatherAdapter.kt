@@ -12,7 +12,7 @@ import com.example.forecast.newmodel.listofweather.*
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.withContext
 
-class WeatherAdapter(val list: ArrayList<ListOfWeather>) : RecyclerView.Adapter<WeatherAdapter.MyHolder>() {
+class WeatherAdapter(var list: ArrayList<ListOfWeather>) : RecyclerView.Adapter<WeatherAdapter.MyHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
@@ -25,12 +25,12 @@ class WeatherAdapter(val list: ArrayList<ListOfWeather>) : RecyclerView.Adapter<
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
-        holder.time.text = list.get(position).forecast!!.forecastday!!.get(position).date
-        holder.tump.text = list.get(position).forecast!!.forecastday!!.get(position).day!!.avgtempC.toString()
-        holder.mode.text = list.get(position).forecast!!.forecastday!!.get(position).day!!.condition!!.text
+        holder.time.text = list[position].forecast!!.forecastday!![position].date
+        holder.tump.text = list[position].forecast!!.forecastday!![position].day!!.avgtempC.toString()
+        holder.mode.text = list[position].forecast!!.forecastday!![position].day!!.condition!!.text
 
        Picasso.get()
-            .load("https:"+list.get(position).forecast!!.forecastday!!.get(position).day!!.condition!!.icon)
+            .load("https:"+ list[position].forecast!!.forecastday!![position].day!!.condition!!.icon)
             .into(holder.image);
 
 
@@ -39,10 +39,10 @@ class WeatherAdapter(val list: ArrayList<ListOfWeather>) : RecyclerView.Adapter<
 
 
     class MyHolder(item_View: View) : RecyclerView.ViewHolder(item_View) {
-        val time = item_View.findViewById<TextView>(R.id.time_item)
-        val tump: TextView = item_View.findViewById(R.id.temperature_item)
-        val image: ImageView = item_View.findViewById(R.id.imageView_item)
-        val mode: TextView = item_View.findViewById(R.id.mode_item)
+        var time = item_View.findViewById<TextView>(R.id.time_item)
+        var tump: TextView = item_View.findViewById(R.id.temperature_item)
+        var image: ImageView = item_View.findViewById(R.id.imageView_item)
+        var mode: TextView = item_View.findViewById(R.id.mode_item)
     }
 
 }
