@@ -1,6 +1,8 @@
 package com.example.forecast.dataBase
 
 import com.example.forecast.newmodel.WeatherModelNew
+import com.example.forecast.newmodel.listofweather.Forecastday
+import com.example.forecast.newmodel.listofweather.Hour
 import com.example.forecast.newmodel.listofweather.ListOfWeather
 import retrofit2.Call
 import retrofit2.http.GET
@@ -13,6 +15,8 @@ interface ServiceApis {
     //get weather one day
     @GET("current.json?key=582fd7fa778b489780593251242202")
     fun getService(@Query("q")latLong:String): Call<WeatherModelNew>
+    @GET("marine.json?key=582fd7fa778b489780593251242202&days=1")
+    fun getHour(@Query("q")latLong:String): Call<Hour>
 
     /*
      static location

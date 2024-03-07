@@ -5,7 +5,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		xmlns:app="http://schemas.android.com/apk/res-auto"
-		android:background="@color/blue2"
+		android:background="@color/blue3"
 		tools:context=".ui.HomeFragment">
 
 
@@ -154,16 +154,31 @@
 
 
 	</androidx.cardview.widget.CardView>
+
+
 	<androidx.recyclerview.widget.RecyclerView
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:id="@+id/recyclerid"
+			android:layout_height="220dp"
+			android:id="@+id/recycleridhoure"
+			android:layout_marginTop="10dp"
 			android:layout_marginHorizontal="5dp"
-			android:layout_marginTop="250dp"
 			app:layout_constraintTop_toBottomOf="@+id/card"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintBottom_toBottomOf="parent"
-			/>
+
+
+	/>
+	<androidx.recyclerview.widget.RecyclerView
+			android:layout_width="match_parent"
+			android:layout_height="330dp"
+			android:id="@+id/recyclerid"
+			android:layout_marginHorizontal="5dp"
+			app:layout_constraintTop_toBottomOf="@+id/recycleridhoure"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent"
+
+			app:layout_constraintBottom_toBottomOf="parent"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
