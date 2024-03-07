@@ -106,6 +106,8 @@ class HomeFragment : Fragment() {
         binding.mode.text = mode
     }
 
+
+
     // response from api (all day)
     fun callWeatherDay(call: ServiceApis, location: String) {
        // Log.i(TAG + "day", "$lat, $long")
@@ -141,11 +143,19 @@ class HomeFragment : Fragment() {
     fun dataOfDays(data: ListOfWeather) {
 
         for (item in mList.size.until(5)) {
-            mList.add(data)
-            mAdapter = WeatherAdapter(mList)
-            Log.i(TAG + "2", mList.toString())
+
+            if (mList.toString().length >= 5)
+            {
+                break
+            }
+            else{
+                mList.add(data)
+                mAdapter = WeatherAdapter(mList)
+                Log.i(TAG + "2", mList.toString())
+            }
 
         }
+
 
         mAdapter = WeatherAdapter(mList)
         //set data to adapter and show in recycler view
@@ -184,7 +194,6 @@ class HomeFragment : Fragment() {
                 mListHour.add(data)
                 hourAdapter = WeatherHourAdapter(mListHour)
                 Log.i(TAG + "3", mListHour.toString())
-
         }
 
         hourAdapter = WeatherHourAdapter(mListHour)

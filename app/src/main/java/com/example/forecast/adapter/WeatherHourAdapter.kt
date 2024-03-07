@@ -28,9 +28,9 @@ class WeatherHourAdapter (var list: ArrayList<Hour>) : RecyclerView.Adapter<Weat
         holder.tump.text = list[position].tempC.toString()
         holder.mode.text = list[position].condition!!.text
 
-        //Picasso.get()
-           // .load("https:"+ list[position].condition!!.icon)
-           // .into(holder.image);
+        Picasso.get()
+           .load("https:"+ list[position].condition!!.icon)
+           .into(holder.image);
 
 
 

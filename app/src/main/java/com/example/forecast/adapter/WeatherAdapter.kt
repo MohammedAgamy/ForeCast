@@ -20,9 +20,6 @@ class WeatherAdapter(var list: ArrayList<ListOfWeather>) : RecyclerView.Adapter<
         return MyHolder(itemView)
     }
 
-    override fun getItemCount(): Int {
-        return list.size
-    }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         holder.time.text = list[position].forecast!!.forecastday!![position].date
@@ -38,6 +35,9 @@ class WeatherAdapter(var list: ArrayList<ListOfWeather>) : RecyclerView.Adapter<
     }
 
 
+    override fun getItemCount(): Int {
+        return list.size
+    }
     class MyHolder(item_View: View) : RecyclerView.ViewHolder(item_View) {
         var time = item_View.findViewById<TextView>(R.id.time_item)
         var tump: TextView = item_View.findViewById(R.id.temperature_item)
