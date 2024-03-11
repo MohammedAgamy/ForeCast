@@ -35,7 +35,6 @@ class HomeFragment : Fragment() {
     var TAG: String = "TAG"
     lateinit var mAdapter: WeatherAdapter
     lateinit var hourAdapter: WeatherHourAdapter
-
     var mList: ArrayList<ListOfWeather> = ArrayList()
     var mListHour: ArrayList<Hour> = ArrayList()
 
@@ -56,6 +55,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // get current location lat and long
         getLocation()
         binding.btnBack.setOnClickListener {
             System.exit(-1)
@@ -65,7 +65,7 @@ class HomeFragment : Fragment() {
 
     // call foe one day
     fun callWeather(call: ServiceApis, location: String) {
-        Toast.makeText(context, location + "this", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(context, location + "this", Toast.LENGTH_SHORT).show()
         call.getService(location).enqueue(object : Callback<WeatherModelNew> {
             override fun onResponse(call: Call<WeatherModelNew>, response: Response<WeatherModelNew>) {
                 if (response.isSuccessful) {
@@ -141,7 +141,7 @@ class HomeFragment : Fragment() {
 
     // get weather data to all day
     fun dataOfDays(data: ListOfWeather) {
-
+        //get 5 item
         for (item in mList.size.until(5)) {
 
             if (mList.toString().length >= 5)
@@ -165,6 +165,7 @@ class HomeFragment : Fragment() {
     }
 
 
+    // get weather to hour but it back null
     fun callWeatherHour(call: ServiceApis, location: String)
     {
       call.getHour(location).enqueue(object :Callback<Hour>{

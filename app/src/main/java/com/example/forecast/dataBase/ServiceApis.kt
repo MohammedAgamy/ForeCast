@@ -15,13 +15,11 @@ interface ServiceApis {
     //get weather one day
     @GET("current.json?key=582fd7fa778b489780593251242202")
     fun getService(@Query("q")latLong:String): Call<WeatherModelNew>
-    @GET("marine.json?key=582fd7fa778b489780593251242202&days=1")
-    fun getHour(@Query("q")latLong:String): Call<Hour>
 
-    /*
-     static location
-     @GET("current.json?key=582fd7fa778b489780593251242202&q=28.39358127454683, 35.886640378494974&aqi=no")
-        fun getService(): Call<WeatherModelNew>*/
+
+    // get weather hour
+    @GET("marine.json?key=582fd7fa778b489780593251242202&days=2")
+    fun getHour(@Query("q")latLong:String): Call<Hour>
 
     //get weather 5 day
     @GET("marine.json?key=582fd7fa778b489780593251242202&days=5")
