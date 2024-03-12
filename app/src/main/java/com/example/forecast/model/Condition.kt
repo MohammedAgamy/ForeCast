@@ -1,4 +1,4 @@
-package com.example.forecast.newmodel.listofweather
+package com.example.forecast.model
 
 
 import com.google.gson.annotations.SerializedName

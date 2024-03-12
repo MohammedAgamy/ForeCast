@@ -1,7 +1,6 @@
 package com.example.forecast.ui
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.ClipDrawable.HORIZONTAL
 
 import android.os.Bundle
 import android.util.Log
@@ -18,10 +17,11 @@ import com.example.forecast.adapter.WeatherHourAdapter
 import com.example.forecast.dataBase.Client
 import com.example.forecast.dataBase.ServiceApis
 import com.example.forecast.databinding.FragmentHOMEBinding
-import com.example.forecast.newmodel.WeatherModelNew
-import com.example.forecast.newmodel.listofweather.Forecastday
-import com.example.forecast.newmodel.listofweather.Hour
-import com.example.forecast.newmodel.listofweather.ListOfWeather
+import com.example.forecast.model.WeatherModelNew
+import com.example.forecast.model.modeldays.Hour
+import com.example.forecast.model.modeldays.ListOfWeather
+import com.example.forecast.presenter.MainPresenter
+import com.example.forecast.presenter.MainView
 import com.google.android.gms.location.LocationServices
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,7 +29,7 @@ import retrofit2.Response
 
 
 @Suppress("CAST_NEVER_SUCCEEDS")
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment() ,MainView {
 
     lateinit var binding: FragmentHOMEBinding
     var TAG: String = "TAG"
@@ -42,11 +42,13 @@ class HomeFragment : Fragment() {
     var lat: String? = null
     var long: String? = null
 
+    var presenter = MainPresenter()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentHOMEBinding.inflate(inflater, container, false);
+        binding = FragmentHOMEBinding.inflate(inflater, container, false)
+        presenter.view =this
         getLocation()
         return binding.getRoot();
 
@@ -54,58 +56,12 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         // get current location lat and long
         getLocation()
         binding.btnBack.setOnClickListener {
             System.exit(-1)
         }
     }
-
-
-    // call foe one day
-    fun callWeather(call: ServiceApis, location: String) {
-        //Toast.makeText(context, location + "this", Toast.LENGTH_SHORT).show()
-        call.getService(location).enqueue(object : Callback<WeatherModelNew> {
-            override fun onResponse(call: Call<WeatherModelNew>, response: Response<WeatherModelNew>) {
-                if (response.isSuccessful) {
-
-                    //Log.i(TAG, "$lat, $long")
-                    //binding.imageView.setImageURI(response.body()!!.current!!.condition!!.icon!!.toUri())
-                    Glide.with(context!!).load("https:" + response.body()!!.current!!.condition!!.icon)
-                        .into(binding.imageView)
-
-                    //set data to fun
-                    setData(
-                        response.body()!!.location!!.country.toString(),
-                        response.body()!!.current!!.tempC.toString(),
-                        response.body()!!.current!!.cloud.toString(),
-                        response.body()!!.current!!.windKph.toString(),
-                        response.body()!!.location!!.localtime.toString(),
-                        response.body()!!.current!!.condition!!.text.toString()
-                    )
-
-                } else {
-                    Log.i(TAG, "weather Not response")
-                }
-            }
-
-            override fun onFailure(call: Call<WeatherModelNew>, t: Throwable) {
-                Log.i(TAG, t.message.toString())
-            }
-        })
-    }
-
-    //set data from abi to ui
-    fun setData(location: String, temperature: String, cloud: String, wind: String, time: String, mode: String) {
-        binding.location.text = location
-        binding.temperature.text = temperature
-        binding.cloud.text = "Cloud " + cloud
-        binding.Wind.text = "Wind " + wind
-        binding.time.text = time
-        binding.mode.text = mode
-    }
-
 
 
     // response from api (all day)
@@ -214,7 +170,7 @@ class HomeFragment : Fragment() {
                 long = location.longitude.toString()
                 val call: ServiceApis = Client.getRetrofit().create(ServiceApis::class.java)
                 var local = "$lat,$long"
-                callWeather(call, local)
+                presenter.callWeather(call,local)
                 callWeatherDay(call, local)
                 callWeatherHour(call,local)
                 // Update UI or perform location-based actions
@@ -226,6 +182,19 @@ class HomeFragment : Fragment() {
             // Handle location retrieval failure (optional)
             Log.e("Location Error", "Failed to get location", exception)
         }
+    }
+
+    override fun viewWeatherOneDay(weatherModelNew: WeatherModelNew) {
+        binding.location.text = weatherModelNew.location!!.country.toString()
+        binding.temperature.text = weatherModelNew.current!!.tempC.toString()
+        binding.cloud.text = "Cloud " + weatherModelNew.current.cloud.toString()
+        binding.Wind.text = "Wind " + weatherModelNew.current.windKph.toString()
+        binding.time.text = weatherModelNew.location.localtime.toString()
+
+        Glide.with(this).load("https:" + weatherModelNew.current.condition!!.icon)
+                .into(binding.imageView)
+
+
     }
 }
 

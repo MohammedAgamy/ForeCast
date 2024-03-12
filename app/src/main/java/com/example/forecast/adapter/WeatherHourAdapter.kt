@@ -7,9 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
-import com.example.forecast.newmodel.listofweather.Forecastday
-import com.example.forecast.newmodel.listofweather.Hour
-import com.example.forecast.newmodel.listofweather.ListOfWeather
+import com.example.forecast.model.modeldays.Hour
 import com.squareup.picasso.Picasso
 
 class WeatherHourAdapter (var list: ArrayList<Hour>) : RecyclerView.Adapter<WeatherHourAdapter.MyHolder>() {
