@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -22,6 +23,7 @@ import com.example.forecast.model.modeldays.Hour
 import com.example.forecast.model.modeldays.ListOfWeather
 import com.example.forecast.presenter.MainPresenter
 import com.example.forecast.presenter.MainView
+import com.example.forecast.presenter.MainViewModel
 import com.google.android.gms.location.LocationServices
 import retrofit2.Call
 import retrofit2.Callback
@@ -42,7 +44,11 @@ class HomeFragment : Fragment() ,MainView {
     var lat: String? = null
     var long: String? = null
 
+    //MVP
     var presenter = MainPresenter()
+
+    //ModelView ViewModel (MVVM)
+    var mainViewModel:MainViewModel?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -56,8 +62,10 @@ class HomeFragment : Fragment() ,MainView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+       mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
         // get current location lat and long
         getLocation()
+        dataOfDays()
         binding.btnBack.setOnClickListener {
             System.exit(-1)
         }
@@ -65,7 +73,7 @@ class HomeFragment : Fragment() ,MainView {
 
 
     // response from api (all day)
-    fun callWeatherDay(call: ServiceApis, location: String) {
+    /*fun callWeatherDay(call: ServiceApis, location: String) {
        // Log.i(TAG + "day", "$lat, $long")
 
         call.getWeatherDay(location).enqueue(object : Callback<ListOfWeather> {
@@ -90,33 +98,34 @@ class HomeFragment : Fragment() ,MainView {
             }
 
         })
-    }
+    }*/
 
 
 
 
     // get weather data to all day
-    fun dataOfDays(data: ListOfWeather) {
-        //get 5 item
-        for (item in mList.size.until(5)) {
+    fun dataOfDays() {
+        mainViewModel!!.data.observe(viewLifecycleOwner) {
 
-            if (mList.toString().length >= 5)
-            {
-                break
-            }
-            else{
-                mList.add(data)
-                mAdapter = WeatherAdapter(mList)
-                Log.i(TAG + "2", mList.toString())
+            //get 5 item
+            for (item in mList.size.until(5)) {
+
+                if (mList.toString().length >= 5) {
+                    break
+                } else {
+                    mList.add(it)
+                    mAdapter = WeatherAdapter(mList)
+                    Log.i(TAG + "2", mList.toString())
+                }
+
             }
 
+            mAdapter = WeatherAdapter(mList)
+            //set data to adapter and show in recycler view
+            binding.recyclerid.adapter = WeatherAdapter(mList)
+            binding.recyclerid.layoutManager = LinearLayoutManager(context)
         }
 
-
-        mAdapter = WeatherAdapter(mList)
-        //set data to adapter and show in recycler view
-        binding.recyclerid.adapter = WeatherAdapter(mList)
-        binding.recyclerid.layoutManager = LinearLayoutManager(context)
 
     }
 
@@ -170,8 +179,8 @@ class HomeFragment : Fragment() ,MainView {
                 long = location.longitude.toString()
                 val call: ServiceApis = Client.getRetrofit().create(ServiceApis::class.java)
                 var local = "$lat,$long"
-                presenter.callWeather(call,local)
-                callWeatherDay(call, local)
+                presenter.callWeather(local)
+                mainViewModel!!.callWeatherDay(local)
                 callWeatherHour(call,local)
                 // Update UI or perform location-based actions
             } else {
@@ -193,7 +202,6 @@ class HomeFragment : Fragment() ,MainView {
 
         Glide.with(this).load("https:" + weatherModelNew.current.condition!!.icon)
                 .into(binding.imageView)
-
 
     }
 }
