@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class Client {
 
-    companion object {
+   companion object {
         val BaseUrl: String = "https://api.weatherapi.com/v1/"
         fun getRetrofit(): Retrofit {
             return Retrofit.Builder()

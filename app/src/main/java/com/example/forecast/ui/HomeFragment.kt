@@ -25,6 +25,8 @@ import com.example.forecast.presenter.MainPresenter
 import com.example.forecast.presenter.MainView
 import com.example.forecast.presenter.MainViewModel
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -117,7 +119,6 @@ class HomeFragment : Fragment() ,MainView {
                     mAdapter = WeatherAdapter(mList)
                     Log.i(TAG + "2", mList.toString())
                 }
-
             }
 
             mAdapter = WeatherAdapter(mList)
@@ -179,7 +180,10 @@ class HomeFragment : Fragment() ,MainView {
                 long = location.longitude.toString()
                 val call: ServiceApis = Client.getRetrofit().create(ServiceApis::class.java)
                 var local = "$lat,$long"
-                presenter.callWeather(local)
+                GlobalScope.launch {
+                    presenter.callWeather(local)
+                }
+
                 mainViewModel!!.callWeatherDay(local)
                 callWeatherHour(call,local)
                 // Update UI or perform location-based actions

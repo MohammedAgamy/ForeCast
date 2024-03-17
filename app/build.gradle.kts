@@ -51,14 +51,17 @@ dependencies {
     //lottie anim
     implementation ("com.airbnb.android:lottie:3.4.0")
     //retrofit2
-    implementation ("com.squareup.retrofit2:retrofit:2.5.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.5.0")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     //picasso
     implementation ("com.squareup.picasso:picasso:2.8")
     //location
-    implementation ("com.google.android.gms:play-services-location:17.0.0")
+    implementation ("com.google.android.gms:play-services-location:21.2.0")
     //glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    //coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
 
 
 
