@@ -33,7 +33,7 @@ import retrofit2.Response
 
 
 @Suppress("CAST_NEVER_SUCCEEDS")
-class HomeFragment : Fragment() ,MainView {
+class HomeFragment : Fragment(), MainView {
 
     lateinit var binding: FragmentHOMEBinding
     var TAG: String = "TAG"
@@ -50,13 +50,13 @@ class HomeFragment : Fragment() ,MainView {
     var presenter = MainPresenter()
 
     //ModelView ViewModel (MVVM)
-    var mainViewModel:MainViewModel?=null
+    var mainViewModel: MainViewModel? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHOMEBinding.inflate(inflater, container, false)
-        presenter.view =this
+        presenter.view = this
         getLocation()
         return binding.getRoot();
 
@@ -64,7 +64,7 @@ class HomeFragment : Fragment() ,MainView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-       mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
         // get current location lat and long
         getLocation()
         dataOfDays()
@@ -72,38 +72,6 @@ class HomeFragment : Fragment() ,MainView {
             System.exit(-1)
         }
     }
-
-
-    // response from api (all day)
-    /*fun callWeatherDay(call: ServiceApis, location: String) {
-       // Log.i(TAG + "day", "$lat, $long")
-
-        call.getWeatherDay(location).enqueue(object : Callback<ListOfWeather> {
-            @SuppressLint("SuspiciousIndentation")
-            override fun onResponse(
-                call: Call<ListOfWeather>, response: Response<ListOfWeather>,
-            ) {
-                if (response.isSuccessful) {
-                    // get data from api response
-                    val data = response.body()!!
-                    dataOfDays(data)
-                    //dataOfHour(data)
-
-                    //Log.i(TAG + "R", response.body()!!.date!!)
-                } else {
-                    Log.i(TAG + "N", "day Not response")
-                }
-            }
-
-            override fun onFailure(call: Call<ListOfWeather>, t: Throwable) {
-                Log.i(TAG + "F", t.message.toString())
-            }
-
-        })
-    }*/
-
-
-
 
     // get weather data to all day
     fun dataOfDays() {
@@ -132,42 +100,41 @@ class HomeFragment : Fragment() ,MainView {
 
 
     // get weather to hour but it back null
-    fun callWeatherHour(call: ServiceApis, location: String)
-    {
-      call.getHour(location).enqueue(object :Callback<Hour>{
-          @SuppressLint("SuspiciousIndentation")
-          override fun onResponse(call: Call<Hour>, response: Response<Hour>) {
-              if (response.isSuccessful) {
-                  // get data from api response
-                 var data = response.body()!!
-                  dataOfHour(data)
-                  Log.i(TAG + "RHou", response.body()!!.time.toString())
-              } else {
-                  Log.i(TAG + "N", "day Not response")
-              }
-          }
+    fun callWeatherHour(call: ServiceApis, location: String) {
+        call.getHour(location).enqueue(object : Callback<Hour> {
+            @SuppressLint("SuspiciousIndentation")
+            override fun onResponse(call: Call<Hour>, response: Response<Hour>) {
+                if (response.isSuccessful) {
+                    // get data from api response
+                    var data = response.body()!!
+                    dataOfHour(data)
+                    Log.i(TAG + "RHou", response.body()!!.time.toString())
+                } else {
+                    Log.i(TAG + "N", "day Not response")
+                }
+            }
 
-          override fun onFailure(call: Call<Hour>, t: Throwable) {
-              TODO("Not yet implemented")
-          }
+            override fun onFailure(call: Call<Hour>, t: Throwable) {
+                TODO("Not yet implemented")
+            }
 
-      })
+        })
     }
 
 
-    fun dataOfHour(data:Hour)
-    {
+    fun dataOfHour(data: Hour) {
         for (item in mListHour.size.until(4)) {
-                mListHour.add(data)
-                hourAdapter = WeatherHourAdapter(mListHour)
-                Log.i(TAG + "3", mListHour.toString())
+            mListHour.add(data)
+            hourAdapter = WeatherHourAdapter(mListHour)
+            Log.i(TAG + "3", mListHour.toString())
         }
 
         hourAdapter = WeatherHourAdapter(mListHour)
         //set data to adapter and show in recycler view
         binding.recycleridhoure.adapter = WeatherHourAdapter(mListHour)
-        binding.recycleridhoure.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL,true)
+        binding.recycleridhoure.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, true)
     }
+
     // get lat and long from yoyr location
     @SuppressLint("MissingPermission")
     private fun getLocation() {
@@ -185,7 +152,7 @@ class HomeFragment : Fragment() ,MainView {
                 }
 
                 mainViewModel!!.callWeatherDay(local)
-                callWeatherHour(call,local)
+                callWeatherHour(call, local)
                 // Update UI or perform location-based actions
             } else {
                 // Location not available, handle failure (optional)
@@ -205,7 +172,7 @@ class HomeFragment : Fragment() ,MainView {
         binding.time.text = weatherModelNew.location.localtime.toString()
 
         Glide.with(this).load("https:" + weatherModelNew.current.condition!!.icon)
-                .into(binding.imageView)
+            .into(binding.imageView)
 
     }
 }

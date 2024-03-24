@@ -13,7 +13,7 @@ class MainPresenter {
     var TAG:String = "TAG"
     lateinit var view: MainView
     private val call = Repository()
-   suspend fun callWeather(location: String) {
+    fun callWeather(location: String) {
        GlobalScope.launch(Dispatchers.IO) {
            call.call.getService(location).enqueue(object : Callback<WeatherModelNew> {
                override fun onResponse(call: Call<WeatherModelNew>, response: Response<WeatherModelNew>) {
